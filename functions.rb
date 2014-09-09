@@ -9,18 +9,25 @@ def query_user_for_date_range
   start_date = nil
   end_date = nil
 
-  puts "\nPlz enter start date"
-  start_date = query_user_for_date
-  puts "\nPlz enter end date"
-  end_date =   query_user_for_date
+  until start_date && end_date
+    puts "\nPlz enter start date"
+    start_date = query_user_for_date
+
+    puts "\nPlz enter end date"
+    end_date =   query_user_for_date
+    
+    if !date_range_valid?(start_date, end_date)
+      puts "Let's try again."
+      start_date = end_date = nil
+    end
+  end
 
   return start_date, end_date
 end
 
 def query_user_for_date
   date = nil
-  # until date.is_a? Date
-  until start_date & end_date
+  until date.is_a? Date
     prompt = "Please, enter a date as YYYY-MM-DD: "
     response = Readline.readline(prompt, true)
 
