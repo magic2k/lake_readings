@@ -1,8 +1,18 @@
 require 'readline'
 require 'date'
+require 'open-uri'
 
 DATA_START_DATE = '2008-01-01'
 MAX_DAYS = 7
+
+# Supported reading types as a hash.
+# Each key is the name used by remote server to locate the data.
+# Each value is a plain text label for data
+READING_TYPES = {
+	"Wind_Speed" => "Wind Speed",
+	"Air_Temp"	 => "Air Temp",
+	"Barometric_Press" => "Pressure"
+}
 
 def query_user_for_date_range
 
@@ -64,3 +74,33 @@ def date_range_valid?(start_date, end_date)
   end
   return true
 end
+
+def get_readings_from_remote_for_dates(type, start_date, end_date)
+  readings = []
+  start_date.upto(end_date) do |date|
+  	readings += get_readings_from_remote(type, date)
+  end
+  return readings
+end
+
+def get_readings_from_remote(type, date)
+	raise "Invalid Reading Type" unless
+	READING_TYPES.keys.include?(type)
+
+  #read the remote file, split readings into a array
+  base_url = "http://lpo.dt.navy.mil/data/DM"
+  url = "#{base_url}/#{date.year}/#{date.strftime("%Y_%m_%d")}/#{type}"
+  puts "Retrieving: #{url}"
+  data = open(url).readlines
+
+  #extract reading from each line
+  # "2014_01_01 00:02:53  7.6/r/n" becomes 7.6
+  readings = data.map do |line|
+  	line_items = line.chomp.split(" ")
+  	reading = line_items[2].to_f
+  end
+  return readings
+end
+
+
+
