@@ -102,5 +102,36 @@ def get_readings_from_remote(type, date)
   return readings
 end
 
+def mean(array)
+  total = array.inject(0) {|sum, x| sum += x}
+  # use .to_f or you will get an integer result
+  return total.to_f / array.length  
+end
+
+def median(array)
+  array.sort!
+  length = array.length
+  if length % 2 == 1
+  	return array[length/2]
+  else
+  	# even length, average the two middle numbers
+  	item1 = array[length/2 - 1]
+  	item2 = array[length/2]
+  	return mean([item1, item2])
+  end
+end
+
+def retrieve_and_calculate_results(start_date, end_date)
+  results = {}
+  READING_TYPES.each do |type, label|
+    readings = get_readings_from_remote_for_dates(type, start_date, end_date)
+    results[label] = {
+  	  mean: mean(readings),
+  	  median: median(readings)
+  	}
+  end
+  return results
+end
+
 
 
