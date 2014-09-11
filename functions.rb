@@ -133,5 +133,18 @@ def retrieve_and_calculate_results(start_date, end_date)
   return results
 end
 
+def output_results_table(results)
+  puts
+  puts "------------------------------------------"
+  puts "|  Type       |  Mean        |  Median    "
+  puts "------------------------------------------"
+  results.each do |label, hash|
+  	print "| " + label.ljust(10) + " | "
+  	print sprintf("%.6f", hash[:mean]).rjust(10) + " | "
+  	puts sprintf("%.6f", hash[:median]).rjust(10) + " |"
+  end
+  puts "--------------------------------------------------"
+  puts
+end
 
 

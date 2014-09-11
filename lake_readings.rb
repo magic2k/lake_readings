@@ -15,4 +15,4 @@ start_date, end_date = query_user_for_date_range
 # end
 
 results = retrieve_and_calculate_results(start_date, end_date)
-puts results.inspect
+output_results_table(results)
